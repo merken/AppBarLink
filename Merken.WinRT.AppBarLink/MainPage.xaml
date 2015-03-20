@@ -1,0 +1,122 @@
+﻿<Page x:Class="Merken.WinRT.AppBarLink.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:Merken.WinRT.AppBarLink"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <SolidColorBrush x:Name="MyBlueBrush" Color="CadetBlue" />
+        <SolidColorBrush x:Name="MyBrownBrush" Color="Chocolate" />
+        <SolidColorBrush x:Name="MyGreenBrush" Color="DarkOliveGreen" />
+        <SolidColorBrush x:Name="MyGrayBrush" Color="DarkSlateGray" />
+        <local:AppBarLink x:Name="LinkToMyThirdGrid" Element="{Binding ElementName=MyThirdGrid}" />
+        <local:AppBarLink x:Name="LinkToMyTextBox" Element="{Binding ElementName=myTextBox}" />
+        <local:AppBarLink x:Name="LinkToMyLastGrid" Element="{Binding ElementName=MyLastGrid}" />
+    </Page.Resources> 
+
+    <Page.TopAppBar>
+        <CommandBar Background="{Binding Element.Background,
+                                                  Source={StaticResource LinkToMyLastGrid}}">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton>
+                    <AppBarButton.Content>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding Element.Text,
+                                                  Source={StaticResource LinkToMyTextBox}}" />
+                    </AppBarButton.Content>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.TopAppBar>
+
+    <Page.BottomAppBar>
+        <CommandBar Background="{Binding Element.Background,
+                                                  Source={StaticResource LinkToMyLastGrid}}">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton>
+                    <AppBarButton.Content>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding Element.Text,
+                                                  Source={StaticResource LinkToMyTextBox}}" />
+                    </AppBarButton.Content>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="MyMainGrid"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch"
+          Background="{StaticResource MyGrayBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  THIS WORKS OUT OF THE BOX  -->
+        <Grid Grid.Row="0" Background="{Binding Background, ElementName=item2}">
+            <Button Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Content="Binding to the background of a child">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="item1"
+                                        Foreground="Black"
+                                        Text="Item 1" />
+                        <MenuFlyoutItem x:Name="item2"
+                                        Background="{StaticResource MyBlueBrush}"
+                                        Text="This works!" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <!--  THIS WORKS IN DESIGNER, BUT NOT AT RUNTIME  -->
+        <Grid x:Name="MyGrid"
+              Grid.Row="1"
+              Background="{StaticResource MyBrownBrush}">
+            <Button HorizontalAlignment="Center" Content="Binding to the background of a parent">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="item3" Text="Item 1" />
+                        <MenuFlyoutItem x:Name="item4"
+                                        Background="{Binding Background,
+                                                             ElementName=MyGrid}"
+                                        Text="This doesn't work at runtime!" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <!--  FIX  -->
+        <Grid x:Name="MyThirdGrid"
+              Grid.Row="2"
+              Background="{StaticResource MyGreenBrush}">
+            <Button HorizontalAlignment="Center" Content="Binding to the background of a parent, fixed">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="item5" Text="Item 1" />
+                        <MenuFlyoutItem x:Name="item6"
+                                        Background="{Binding Element.Background,
+                                                             Source={StaticResource LinkToMyThirdGrid}}"
+                                        Text="This is now fixed!" />
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
+
+        <!--  TEXT INPUT  -->
+        <Grid Grid.Row="3" Background="{StaticResource MyGrayBrush}" x:Name="MyLastGrid">
+            <TextBox x:Name="myTextBox" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+</Page>
